@@ -19,13 +19,12 @@ import java.util.logging.Logger;
  */
 public class KnockKnockServer {
 
-    private static final int PORT = 4444; 
-    private static final int pool = 5; 
+    private static final int PORT = 4444;
+    private static final int pool = 5;
 
     public static void main(String[] args) {
 
         ExecutorService executor = Executors.newFixedThreadPool(pool);
-
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             System.out.println("Servidor KnockKnock iniciado en el puerto " + PORT);
 
@@ -33,7 +32,8 @@ public class KnockKnockServer {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Acepte a un cliente: " + clientSocket.getInetAddress());
 
-                executor.execute(new KnockKnockClientManager(clientSocket));
+                ILlamadaMetodos llamadaCliente = new KnockKnockLLamadaMetodos();
+                executor.execute(new KnockKnockSkeleton(clientSocket, llamadaCliente));
             }
         } catch (IOException ex) {
             Logger.getLogger(KnockKnockServer.class.getName()).log(Level.SEVERE, null, ex);
